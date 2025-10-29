@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .user-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-card h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .info-item {
+            margin: 10px 0;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+        .error {
+            color: #dc3545;
+            padding: 15px;
+            background-color: #f8d7da;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Profiles</h1>
+    <div id="usersContainer"></div>
+    <script>
+        fetch('userProfiles.json') 
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                return response.json();
+            })
+            .then(users => {
+                const container = document.getElementById('usersContainer');
+                for (const id in users) {
+                    if (users.hasOwnProperty(id)) {
+                        const user = users[id];
+                        const userCard = document.createElement('div');
+                        userCard.className = 'user-card';
+                        userCard.innerHTML = `
+                            <h2>User ID: ${id}</h2>
+                            <div class="info-item">
+                                <span class="label">Name:</span> ${user.firstName} ${user.lastName}
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Email:</span> ${user.email}
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Date of Birth:</span> ${user.dateOfBirth}
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Address:</span>
+                                <br>
+                                ${user.address.street}<br>
+                                ${user.address.city}, ${user.address.state} ${user.address.zipCode}
+                            </div>
+                        `; 
+                        container.appendChild(userCard);
+                    }
+                }
+            })
+    </script>
+</body>
+</html>
